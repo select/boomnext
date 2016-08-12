@@ -1,0 +1,136 @@
+<html>
+	<head>
+		<meta charset="utf-8">
+		<script src="boomnext.js"></script>
+	</head>
+	<body>
+		<!-- Messages -->
+		<div class="status"></div>
+		<div class="warn"></div>
+
+		<!-- Boomnext logo -->
+		<div class="tv-control">
+			<img src="img/boomnext-logo.png" width="70">
+		</div>
+
+		<!-- About overlay -->
+		<div class="overlay-about overlay">
+			<div class="close">✕</div>
+			<div class="body">
+				<p>
+					<b>Boom, next video!</b><br>
+					was created by <a href="https://github.com/select" target="_blank">select</a> since he loves funny videos.
+				</p>
+				<p>
+					The idea was out there for a long time but not enough motivation to do it. Then 5by came along
+					and fulfilled all his dreams. The <i>Wow</i> channel was everthing he hoped for ... but oh crule
+					fate, 5by disappeared.
+				</p>
+				<p>
+					He still wanted to watch funny videos with his buddies and so BoomNext was created on a few weekends.
+				</p>
+				<p>
+					If you like it <a href="https://github.com/select/boomnext" target="_blank">give it a star on github!</a>.
+				</p>
+				<p>
+					If you found bugs, you have another site that has more cool videos that should be added, go to the github
+					<a href="https://github.com/select/boomnext/issues" target="_blank">issue tracker</a> and add a comment.
+				</p>
+			</div>
+		</div>
+
+		<!-- Manuals overlay -->
+		<div class="overlay-manual overlay">
+			<div class="close">✕</div>
+			<table>
+				<thead>
+					<tr>
+						<td>
+							Button
+						</td>
+						<td>
+							Keyboard
+						</td>
+						<td></td>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td><div class="boom">💣</div></td>
+						<td>B</td>
+						<td>Start / stop TV</td>
+					</tr>
+					<tr>
+						<td class="larger">‹</td>
+						<td>◀</td>
+						<td>Previous video</td>
+					</tr>
+					<tr>
+						<td class="larger">›</td>
+						<td>▶</td>
+						<td>Next video</td>
+					</tr>
+					<tr>
+						<td class="larger">»</td>
+						<td>N</td>
+						<td>Next video (skip watched)</td>
+					</tr>
+					<tr>
+						<td></td>
+						<td>Space</td>
+						<td>Pause / play video</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+
+		<!-- TV overlay -->
+		<div class="tv-overlay">
+			<video src="" style="width:800px; height:600px;"></video>
+			<webview src="youtube.html" partition="static" style="width:800px; height:600px;" allowtransparency></webview>
+			<div class="tv-prev"> ‹ </div>
+			<div class="tv-next"> › </div>
+			<div class="tv-next-skip"> » </div>
+		</div>
+
+		<!-- Main page -->
+		<!-- Header -->
+		<header>
+			<div class="menu">☰</div>
+			<h1>Boom, next video</h1>
+		</header>
+
+		<!-- Left Sidenavigation -->
+		<nav>
+			<div class="header"><div class="menu">☰</div></div>
+			<ul>
+				<li class="show-overlay-manual"> ⚙ Controls </li>
+				<li class="show-overlay-about"> <div class="icon-info">i</div> About </li>
+			</ul>
+		</nav>
+
+		<!-- Greetings -->
+		<div class="greeting">
+			It's <span class="Day">Saturday</span> <span class="timeofday">night</span>.
+		</div>
+		<div class="sub-greeting">
+			Let's start wasting time with ...
+		</div>
+
+		<!-- TV Stations -->
+		<div class="stations">
+			<div class="tv-station" data-name="imgur">
+				<img src="img/imgur-logo.svg" width="150">
+			</div>
+			<!-- <div class="tv-station" data-name="pr0">
+				<img src="img/pr0gramm-logo.png" width="70">
+			</div> -->
+			<div class="tv-station" data-name="ninegag">
+				<img src="img/9gag-logo.png" width="70">
+			</div>
+			<div class="tv-station" data-name="izismile">
+				<img src="img/izismile-logo.gif" width="150">
+			</div>
+		</div>
+	</body>
+</html>

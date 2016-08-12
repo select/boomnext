@@ -1,0 +1,272 @@
+@import 'color'
+@import 'fonts'
+
+
+// Space
+$grid-space: 7px
+
+$touch-size-tiny: 4*$grid-space
+$touch-size-small: 5*$grid-space
+$touch-size-medium: 6*$grid-space
+$touch-size-large: 8*$grid-space
+$touch-size-huge: 9*$grid-space
+
+// Time
+$transition-time: 250ms
+
+$font-large: 2.5em
+// $font-huge:
+
+
+body
+	position: relative
+	background-size: cover
+	margin: 0
+	font-family: 'Open Sans', sans-serif
+	color: $color-white
+	font-weight: 300
+	display: flex
+	flex-direction: column
+	align-items: center
+header
+	background: rgba(255,255,255, 0.4)
+	height: $touch-size-large
+	display: flex
+	align-items: center
+	justify-content: center
+	width: 100%
+	position: relative
+	h1
+		font-weight: normal
+.menu
+	position: absolute
+	top: 0
+	left: 0
+	cursor: pointer
+	text-align: center
+	line-height: $touch-size-large
+	height: $touch-size-large
+	width: $touch-size-large
+	font-size: 2.5em
+
+.overlay
+	display: none
+	position: absolute
+	top: 0
+	left: 0
+	background: rgba(0,0,0,0.8)
+	display: flex
+	justify-content: center
+	align-items: center
+	color: $color-white
+	width: 100%
+	height: 100%
+	z-index: 3
+	a
+		color: $color-white
+		&:hover, &:visited
+			color: $color-white
+	.close
+		position: absolute
+		top: 0
+		right: 0
+		width: 50px
+		height: 50px
+		line-height: 50px
+		font-size: 3em
+	.body
+		font-size: 2em
+		max-width: 600px
+	table
+		font-size: 2em
+		thead td
+			font-weight: bold
+			padding-bottom: #{2*$grid-space}
+		td
+			min-width: 200px
+
+nav
+	position: absolute
+	background: rgba(0,0,0,0.5)
+	width: 300px
+	margin-left: -300px
+	height: 100%
+	top: 0
+	left: 0
+	padding-top: #{12*$grid-space}
+	transition: all 250ms
+	ul
+		padding: 0
+		list-style: none
+		width: 100%
+		li
+			height: $touch-size-large
+			width: 100%
+			font-size: $font-large
+			padding-left: $touch-size-large
+			cursor: pointer
+			display: flex
+			align-items: center
+	&.extended
+		margin-left: 0
+
+.icon-info
+	display: inline-block
+	width: 18px
+	height: 18px
+	border-radius: 50%
+	border: 2px solid #fff
+	font-style: italic
+	font-size: 16px
+	text-align: center
+	line-height: 20px
+	font-weight: 700
+	margin-left: 2px
+	margin-right: 12px
+.docu
+	td
+		min-width: 100px
+	.larger
+		font-size: 1.4em
+
+.boom
+	display: inline-block
+	transform: scaleX(-1) rotate(12deg)
+.greeting
+	font-size: 72px
+	margin: $touch-size-tiny
+	text-align: center
+
+.sub-greeting
+	font-size: $font-large
+	text-align: center
+
+$station-box-width: 220px
+.stations
+	margin-top: $touch-size-tiny
+	max-width: #{($station-box-width+$grid-space)*3}
+	display: flex
+	flex-wrap: wrap
+	justify-content: center
+	div
+		width: $station-box-width
+		height: 130px
+		margin: #{$grid-space/2}
+		border-radius: 3px
+		background: rgba(0,0,0,0.5)
+		color: $color-white
+		box-sizing: border-box
+		display: flex
+		align-items: center
+		justify-content: center
+		cursor: pointer
+		transition: all $transition-time
+		&:hover
+			background: rgba(0,0,0,0.9)
+
+
+.tv-overlay
+	position: fixed
+	background-color: rgba(0, 0, 0, 0.9)
+	z-index: 2
+	display: flex
+	align-items: center
+	justify-content: center
+	top: 0
+	left: 0
+
+	.loading
+		position: absolute
+		left: 50%
+		right: 50%
+		top: 50%
+		bottom: 50%
+		font-size: 22px
+		color: #d23c22
+		white-space: nowrap
+	webview
+		display: none
+	video
+		display: none
+
+// Status codes bottom right
+.status
+	position: absolute
+	z-index: 3
+	right: 0
+	bottom: 0
+	color: #eee
+
+// Stacking warnings
+.warn
+	position: absolute
+	z-index: 3
+	width: 100%
+	top: #{2*$grid-space}
+	left: 0
+	display: flex
+	align-items: center
+	flex-direction: column
+	>div
+		position: relative
+		width: 340px
+		padding: #{2*$grid-space}
+		font-size: 1.2em
+		font-weight: 400
+		background: $color-monza
+		color: $color-white
+		border-radius: 3px
+		margin-bottom: $grid-space
+		padding-right: #{2*$grid-space}
+		.close
+			position: absolute
+			width: 30px
+			height: 30px
+			line-height: 30px
+			cursor: pointer
+			top: 0
+			right: 0
+			display: flex
+			justify-content: center
+			align-content: center
+			font-size: 1.6em
+
+.tv-next,
+.tv-next-skip,
+.tv-prev
+	font-size: 120px
+	color: #eee
+	position: absolute
+	top: 0
+	width: 75px
+	height: 100%
+	display: flex
+	align-items: center
+	cursor: pointer
+	&:hover
+		color: #d23c22
+.tv-next
+	right: 78
+	justify-content: flex-end
+.tv-next-skip
+	right: 0
+	justify-content: flex-end
+.tv-prev
+	left: 0
+	justify-content: flex-start
+
+.tv-control
+	position: fixed
+	z-index: 3
+	top: 5px
+	right: 5px
+	color: #CA4343
+	border-radius: 5px
+	width: 70px
+	height: 40px
+	background: rgba(0, 0, 0, 0.3)
+	padding: 3px 5px
+	cursor: pointer
+	display: flex
+	justify-content: center
+	align-items: center
