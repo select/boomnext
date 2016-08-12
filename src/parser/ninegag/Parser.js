@@ -29,7 +29,6 @@ export default class extends BaseParser {
 			this.lastKey = posts[posts.length - 1].hashedId;
 			// http://9gag.com/tv/api/index/LJEGX?ref_key=aoX3X1&count=20&direction=1
 			// http://9gag.com/tv/api/index/LJEGX?ref_key=a2ajyY&count=20&direction=1
-			console.log('got videos ', this.videos);
 		});
 	}
 }
