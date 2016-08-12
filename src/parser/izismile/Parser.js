@@ -15,9 +15,9 @@ export default class extends BaseParser {
 		const ytNode = node.querySelector('iframe[allowfullscreen]');
 		const mp4Node = node.querySelector('a[href$=".mp4"]');
 		return {
-			id: ytNode ? ytNode.src : mp4Node.src,
+			id: ytNode ? ytNode.src : mp4Node.href,
 			youtube: { url: ytNode ? ytNode.src : null },
-			mp4: mp4Node ? mp4Node.src : null,
+			mp4: mp4Node ? mp4Node.href : null,
 		};
 	}
 
