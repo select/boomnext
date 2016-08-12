@@ -2,7 +2,7 @@ export default class {
 	constructor() {
 		this.videos = [];
 		this.currentVideoIndex = -1;
-		this.currentPageIndex = 1;
+		this.currentPageIndex = 0;
 	}
 
 	ajax(url) {
@@ -41,11 +41,17 @@ export default class {
 			if (this.currentVideoIndex >= this.videos.length - 1) {
 				this.getVideosFromIndex(++this.currentPageIndex).then(() => {
 					resolve(this.videos[this.currentVideoIndex]);
-				}, err => reject(err));
+				}, err => {
+					--this.currentPageIndex;
+					reject(err);
+				});
 			} else {
 				// 3 before last, request next index page to get more videos
 				if (this.currentVideoIndex >= this.videos.length - 4) {
-					this.getVideosFromIndex(++this.currentPageIndex).catch(err => reject(err));
+					this.getVideosFromIndex(++this.currentPageIndex).catch(err => {
+						--this.currentPageIndex;
+						reject(err);
+					});
 				}
 				resolve(this.videos[this.currentVideoIndex]);
 			}

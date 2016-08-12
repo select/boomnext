@@ -7,6 +7,7 @@ export default class extends BaseParser {
 		this.requestHeader = ['Authorization', 'Client-ID <client-id>'];
 		// this.videos = []; // provided in base
 		this.parserName = 'imgur API';
+		this.currentPageIndex = -1;
 	}
 
 	getVideosFromIndex(index) {
