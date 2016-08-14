@@ -7,11 +7,6 @@
 			"scripts": ["background.js"]
 		}
 	},
-	// "sandbox": {
-	// 	"pages": ["youtube.html"]
-	// 	// content_security_policy is optional.
-	// 	// "content_security_policy":"sandbox allow-scripts; script-src https://www.youtube.com/*"
-	// },
 	"webview": {
 		"partitions": [
 			{
@@ -21,6 +16,7 @@
 		]
 	},
 	"permissions": [
+		"fileSystem",
 		"webview",
 		"fullscreen",
 		"http://izismile.com/videos/",
