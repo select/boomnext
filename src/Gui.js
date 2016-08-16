@@ -38,18 +38,15 @@ default class {
 			});
 		});
 
-		const overlayManualEl = document.querySelector('.overlay-manual');
-		overlayManualEl.style.display = 'none';
-		overlayManualEl.addEventListener('click', event => {overlayManualEl.style.display = 'none';});
-		document.querySelector('.show-overlay-manual').addEventListener('click', event => {
-			overlayManualEl.style.display = '';
+		// left navigation triggers overlays
+		[].forEach.call(document.querySelectorAll('.overlay'), el => {
+			el.style.display = 'none';
+			el.addEventListener('click', event => { event.currentTarget.style.display = 'none'; });
 		});
-
-		const overlayAboutEl = document.querySelector('.overlay-about');
-		overlayAboutEl.style.display = 'none';
-		overlayAboutEl.addEventListener('click', event => {overlayAboutEl.style.display = 'none';});
-		document.querySelector('.show-overlay-about').addEventListener('click', event => {
-			overlayAboutEl.style.display = '';
+		[].forEach.call(document.querySelectorAll('.show-overlay'), el => {
+			el.addEventListener('click', event => {
+				document.querySelector(`[data-overlay="${event.currentTarget.dataset.target}"]`).style.display = '';
+			});
 		});
 
 

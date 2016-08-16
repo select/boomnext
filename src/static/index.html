@@ -13,8 +13,14 @@
 			<img src="img/boomnext-logo.png" width="70">
 		</div>
 
+		<!-- Plugins overlay -->
+		<div class="overlay"  data-overlay="plugins">
+			<div class="close">✕</div>
+			<h2>Plugins</h2>
+		</div>
+
 		<!-- About overlay -->
-		<div class="overlay-about overlay">
+		<div class="overlay" data-overlay="about">
 			<div class="close">✕</div>
 			<div class="body">
 				<p>
@@ -40,7 +46,7 @@
 		</div>
 
 		<!-- Manuals overlay -->
-		<div class="overlay-manual overlay">
+		<div class="overlay" data-overlay="manual">
 			<div class="close">✕</div>
 			<table>
 				<thead>
@@ -104,8 +110,9 @@
 		<nav>
 			<div class="header"><div class="menu">☰</div></div>
 			<ul>
-				<li class="show-overlay-manual"> ⚙ Controls </li>
-				<li class="show-overlay-about"> <div class="icon-info">i</div> About </li>
+				<li class="show-overlay" data-target="manual"> ⚙ Controls </li>
+				<li class="show-overlay" data-target="about"> <div class="icon-info">i</div> About </li>
+				<li class="show-overlay" data-target="plugins"> <div class="icon-info">P</div> Plugins </li>
 			</ul>
 		</nav>
 
