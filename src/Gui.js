@@ -38,10 +38,13 @@ default class {
 			});
 		});
 
-		// left navigation triggers overlays
+		// Left navigation items trigger showing overlays.
+		// Click on overlay, hides overlay.
 		[].forEach.call(document.querySelectorAll('.overlay'), el => {
 			el.style.display = 'none';
-			el.addEventListener('click', event => { event.currentTarget.style.display = 'none'; });
+			el.addEventListener('click', event => {
+				if (['overlay', 'close'].includes(event.target.className)) event.currentTarget.style.display = 'none';
+			});
 		});
 		[].forEach.call(document.querySelectorAll('.show-overlay'), el => {
 			el.addEventListener('click', event => {
@@ -60,7 +63,7 @@ default class {
 		this.mouseTimer = null;
 		this.cursorVisible = true;
 		this.setWelcomMessage();
-		setInterval(this.setWelcomMessage, (1000 * 60 * 60)); // every hour change the welcome message
+		setInterval(this.setWelcomMessage, (1000 * 60 * 30)); // every half-hour change the welcome message
 	}
 
 	setWelcomMessage() {
