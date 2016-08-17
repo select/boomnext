@@ -1,29 +1,40 @@
-Boom, next video - plugin
+#Boom, next video - plugin
 
-The Plugin must provide the following files
+The plugin is a zipfile that must contain the following files
 ```
-plugin.json
-Parser.js
+plugin.zip
+├─o plugin.json
+├─o Parser.js
+└─o some-image-file.[any web format]
 ```
 
 The `plugin.json` must contain the following keys
-- `className` - Name of the class that is provided in Parser.js
-- `logoImg` - An image for the channel this plugin provides; the image must be contained in the zip
-- `width` or `height` - the width or the height of the image in the tile
-```
-
-The `Parser.js` must fulfill the following API
-It must contain a function called `getNext()` that returns a `Promise` which retruns an video object of the following structure
 ```
 {
-	mp4: 'url string', // (or youtube) if a mp4 video is provided
-	youtube: { // (or mp4)
-		url: 'url string', // (or id)
-		id: 'youtube id string', //(or url)
-		startSeconds: 123, // Number
-		endSeconds: 123, // Number
+
+	"className": '...', // String - Name of the JS class that is provided 
+	by Parser.js
+	"logoImg": '...', // String - An image for the channel this plugin
+	 provides; the image must be contained in the zip
+	"width" or "height": 123, // Number - image dimensions in the tile
+}
+```
+
+The class in `Parser.js` must fulfill the following API:
+It must contain a function called `getNext()` that returns a `Promise` which returns a object of the following structure
+```
+{
+	mp4: 'url', // String (or youtube) if a mp4 video is provided
+	youtube: { // Object (or mp4)
+		url: 'youtube url', // String (or id)
+		id: 'youtube id', //String (or url)
+		startSeconds: 123, // Number optional)
+		endSeconds: 123, // Number optional)
 	}
 }
 ```
 
-the `getPrev()` 
+rejeted promises should return a String with the error message.
+The `getPrev()` function should return the object above directly.
+
+Currently only mp4 and youtube videos are supported, more support can be added, create an issue at github, or a pull request!
