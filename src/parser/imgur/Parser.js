@@ -4,7 +4,7 @@ export default class extends BaseParser {
 	constructor() {
 		super();
 		this.baseURL = 'https://api.imgur.com/3/gallery/hot/viral/';
-		this.requestHeader = ['Authorization', 'Client-ID <client-id>'];
+		this.requestHeader = ['Authorization', 'Client-ID c35fbc04fe9ccda'];
 		// this.videos = []; // provided in base
 		this.parserName = 'imgur API';
 		this.currentPageIndex = -1;
