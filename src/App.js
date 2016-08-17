@@ -10,7 +10,7 @@ import Gui from './Gui';
 import IzismileParser from './parser/izismile/Parser';
 import ImgurParser from './parser/imgur/Parser';
 import NineGagParser from './parser/ninegag/Parser';
-import IndexDB from './IndexDB';
+import IndexDB from './IndexDBVideos';
 
 class App {
 	constructor() {
@@ -175,7 +175,7 @@ class App {
 				this.nextVideo(true);
 			} else {
 				this.message(`got next video ${JSON.stringify(video)}`);
-				this.db.set(video);
+				this.db.exists(video);
 				this.startVideo(video);
 			}
 		}, (error) => this.gui.warn(error));
