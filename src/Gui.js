@@ -1,5 +1,4 @@
-export
-default class {
+export default class {
 	constructor() {
 		console.log('## loading ui');
 		// prepare HTML Elements

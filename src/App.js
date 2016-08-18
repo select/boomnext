@@ -11,6 +11,7 @@ import IzismileParser from './parser/izismile/Parser';
 import ImgurParser from './parser/imgur/Parser';
 import NineGagParser from './parser/ninegag/Parser';
 import IndexDB from './IndexDBVideos';
+import Plugins from './Plugins';
 
 class App {
 	constructor() {
@@ -22,6 +23,7 @@ class App {
 		} catch (err) {
 			this.gui.warn(err);
 		}
+		this.plugins = new Plugins(this.gui);
 		this.parsers = {
 			imgur: new ImgurParser(this.db),
 			izismile: new IzismileParser(this.db),
