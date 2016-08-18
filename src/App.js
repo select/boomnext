@@ -66,7 +66,7 @@ class App {
 		 * with images before we get to the previous video
 		 */
 		document.addEventListener('keydown', (event) => {
-			console.log('key ', event.keyCode);
+			// console.log('key ', event.keyCode);
 			if (event.keyCode === 32 /* Space*/) {
 				if (this.video.youtube) this.youtubeMessage({ togglePlay: true });
 				else if (this.video.mp4) this.videoEL.paused ? this.videoEL.play() : this.videoEL.pause();
@@ -170,15 +170,28 @@ class App {
 	nextVideo(skip) {
 		this.message(`requesting next video from ${this.currentParser}`);
 
-		this.parser.getNext().then(video => {
-			if (skip && this.db.exists(video)) {
-				this.nextVideo(true);
-			} else {
+		if (skip) {
+			this.parser.getNext()
+				.then(video => {
+					this.message(`got next video ${JSON.stringify(video)}`);
+					this.video = video;
+					return this.db.exists(video);
+				})
+				.then(exists => {
+					this.message(`video exists? ${exists}`);
+					if (exists) {
+						this.nextVideo(true);
+					} else {
+						this.startVideo(this.video);
+					}
+				}, error => this.gui.warn(error));
+		} else {
+			this.parser.getNext().then(video => {
 				this.message(`got next video ${JSON.stringify(video)}`);
 				this.db.exists(video);
 				this.startVideo(video);
-			}
-		}, (error) => this.gui.warn(error));
+			});
+		}
 	}
 
 	prevVideo() {
