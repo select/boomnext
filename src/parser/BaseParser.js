@@ -39,7 +39,7 @@ export default class {
 
 			// no videos left, we must wait before we can return a new video
 			if (this.currentVideoIndex >= this.videos.length - 1) {
-				this.getVideosFromIndex(++this.currentPageIndex).then(() => {
+				this.getVideosFromIndex().then(() => {
 					resolve(this.videos[this.currentVideoIndex]);
 				}, err => {
 					--this.currentPageIndex;
@@ -48,10 +48,7 @@ export default class {
 			} else {
 				// 3 before last, request next index page to get more videos
 				if (this.currentVideoIndex >= this.videos.length - 4) {
-					this.getVideosFromIndex(++this.currentPageIndex).catch(err => {
-						--this.currentPageIndex;
-						reject(err);
-					});
+					this.getVideosFromIndex();
 				}
 				resolve(this.videos[this.currentVideoIndex]);
 			}
