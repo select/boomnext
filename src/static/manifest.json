@@ -16,7 +16,6 @@
 		]
 	},
 	"permissions": [
-		"fileSystem",
 		"webview",
 		"fullscreen",
 		"http://izismile.com/videos/",
