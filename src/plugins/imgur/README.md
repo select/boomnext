@@ -24,6 +24,7 @@ The class in `Parser.js` must fulfill the following API:
 It must contain a function called `getNext()` that returns a `Promise` which returns a object of the following structure
 ```
 {
+	id: 'abc' // String (required) a unique identifier use the mp4 URL or the youtube id
 	mp4: 'url', // String (or youtube) if a mp4 video is provided
 	youtube: { // Object (or mp4)
 		url: 'youtube url', // String (or id)
@@ -34,7 +35,9 @@ It must contain a function called `getNext()` that returns a `Promise` which ret
 }
 ```
 
-rejeted promises should return a String with the error message.
+The value of the `id` key is used to store the video in a database so BoomNext can later skip already watched videos. Thats why it's good to use the mp4 URLs or YouTube id's so the same videos can be skipped even if they already watched on a different channel.
+
+Rejected promises should return a String with the error message.
 The `getPrev()` function should return the object above directly.
 
 Currently only mp4 and youtube videos are supported, more support can be added, create an issue at github, or a pull request!
