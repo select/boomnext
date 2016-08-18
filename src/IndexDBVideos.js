@@ -7,7 +7,7 @@ export default class {
 		//No support? Go in the corner and pout.
 		if (!this.indexedDBOk) throw ('Error: indexDB missing.');
 
-		const openRequest = indexedDB.open('boomnext_v001a', 1);
+		const openRequest = indexedDB.open('boomnext_v001c', 1);
 
 		openRequest.onupgradeneeded = (event) => {
 			const thisDB = event.target.result;
@@ -53,7 +53,7 @@ export default class {
 			const request = this.db
 				.transaction([this.collectionName], 'readwrite')
 				.objectStore(this.collectionName)
-				.add(data, 1);
+				.add(data);
 			request.onerror = (event) => {
 				reject(`Error ${event.target.error.name}`);
 			};
