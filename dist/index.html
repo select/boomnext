@@ -13,13 +13,30 @@
 			<img src="img/boomnext-logo.png" width="70">
 		</div>
 
+		<!-- Plugins overlay -->
+		<div class="overlay"  data-overlay="plugins">
+			<div class="close">✕</div>
+			<div class="body">
+				<p>
+					<b>Plugins</b><br>
+					<br>
+					<input class="upload-plugin" id="ufile" type="file" accept=".zip, application/zip"> <label for="ufile">Upload</label> a plugin
+				</p>
+				<p>
+					Loaded Plugins
+					<ul></ul>
+				</p>
+			</div>
+
+		</div>
+
 		<!-- About overlay -->
-		<div class="overlay-about overlay">
+		<div class="overlay" data-overlay="about">
 			<div class="close">✕</div>
 			<div class="body">
 				<p>
 					<b>Boom, next video!</b><br>
-					was created by <a href="https://github.com/select" target="_blank">select</a> since he loves funny videos.
+					was created by <a href="https://github.com/select" target="_blank">select</a> because he loves funny videos.
 				</p>
 				<p>
 					The idea was out there for a long time but not enough motivation to do it. Then 5by came along
@@ -40,7 +57,7 @@
 		</div>
 
 		<!-- Manuals overlay -->
-		<div class="overlay-manual overlay">
+		<div class="overlay" data-overlay="manual">
 			<div class="close">✕</div>
 			<table>
 				<thead>
@@ -104,8 +121,9 @@
 		<nav>
 			<div class="header"><div class="menu">☰</div></div>
 			<ul>
-				<li class="show-overlay-manual"> ⚙ Controls </li>
-				<li class="show-overlay-about"> <div class="icon-info">i</div> About </li>
+				<li class="show-overlay" data-target="manual"> ⚙ Controls </li>
+				<li class="show-overlay" data-target="about"> <div class="icon-info">i</div> About </li>
+				<li class="show-overlay" data-target="plugins"> <div class="icon-info">P</div> Plugins </li>
 			</ul>
 		</nav>
 
