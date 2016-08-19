@@ -35,9 +35,9 @@ It must contain a function called `getNext()` that returns a `Promise` which ret
 }
 ```
 
-The value of the `id` key is used to store the video in a database so BoomNext can later skip already watched videos. Thats why it's good to use the mp4 URLs or YouTube id's so the same videos can be skipped even if they already watched on a different channel.
+The value of the `id` key is used to store the video in a database so BoomNext can later skip already watched videos. Thats why it's good to use the mp4 URLs or YouTube id's so the same videos can be skipped even if they were already watched on a different channel.
 
-Rejected promises should return a String with the error message.
-The `getPrev()` function should return the object above directly.
+Rejected promises should return a String with an error message.
+The `getPrev()` function should return the object above directly without a promise.
 
-Currently only mp4 and youtube videos are supported, more support can be added, create an issue at github, or a pull request!
+Currently only mp4 and youtube videos are supported, more platforms can be supported, create an issue at github, or a pull request!
