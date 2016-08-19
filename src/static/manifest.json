@@ -19,7 +19,8 @@
 		"webview",
 		"fullscreen",
 		"http://izismile.com/videos/",
-		"http://9gag.com/tv/api/index/*"
+		"http://9gag.com/tv/api/index/*",
+		"https://*/*"
 	],
 	"icons": {
 		"16": "boomnext-16.png",

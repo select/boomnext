@@ -10,6 +10,7 @@ import Gui from './Gui';
 import IzismileParser from './parser/izismile/Parser';
 import ImgurParser from './parser/imgur/Parser';
 import NineGagParser from './parser/ninegag/Parser';
+import Pr0grammParser from './parser/pr0gramm/Parser';
 import IndexDB from './IndexDBVideos';
 import Plugins from './Plugins';
 
@@ -25,9 +26,10 @@ class App {
 		}
 		this.plugins = new Plugins(this.gui);
 		this.parsers = {
-			imgur: new ImgurParser(this.db),
-			izismile: new IzismileParser(this.db),
-			ninegag: new NineGagParser(this.db),
+			imgur: new ImgurParser(),
+			izismile: new IzismileParser(),
+			ninegag: new NineGagParser(),
+			pr0gramm: new Pr0grammParser(),
 		};
 
 		this.gui.controlEl.addEventListener('click', () => this.toggleTV());
