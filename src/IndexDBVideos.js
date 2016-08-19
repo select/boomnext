@@ -39,7 +39,7 @@ export default class {
 		return 'indexedDB' in window;
 	}
 
-	exists(data) {
+	exists(data = { id: undefined }) {
 		return this.get(data.id)
 			.then((result) => {
 				if (result) return 'exists';
