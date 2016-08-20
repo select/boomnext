@@ -1,4 +1,4 @@
-#Boom, next video - plugin
+#BoomNext - plugin
 
 The plugin is a zipfile that must contain the following files
 ```
@@ -11,7 +11,6 @@ plugin.zip
 The `plugin.json` must contain the following keys
 ```
 {
-
 	"className": '...', // String - Name of the JS class that is provided 
 	by Parser.js
 	"logoImg": '...', // String - An image for the channel this plugin
