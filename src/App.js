@@ -18,19 +18,21 @@ class App {
 	constructor() {
 		this.isRunning = false;
 		this.gui = new Gui();
-		this.message('# Boom Next Video');
+		this.message('# Boom, next video!');
 		try { // if indexDB is available
 			this.db = new IndexDB();
 		} catch (err) {
 			this.gui.warn(err);
 		}
-		this.plugins = new Plugins(this.gui);
 		this.parsers = {
 			imgur: new ImgurParser(),
 			izismile: new IzismileParser(),
 			ninegag: new NineGagParser(),
 			pr0gramm: new Pr0grammParser(),
 		};
+		this.plugins = new Plugins(this.gui, pluginsPromise => {
+			pluginsPromise.then(plugins => plugins.forEach(plugin => { this.parsers[plugin] = new window[plugin](); }));
+		});
 
 		this.gui.controlEl.addEventListener('click', () => this.toggleTV());
 		this.gui.prevEl.addEventListener('click', () => this.prevVideo());
@@ -58,17 +60,17 @@ class App {
 		});
 	}
 
+	/**
+	 * ## Keyboard Shortcuts
+	 * Bind keyboard shortcuts:
+	 * - Space: pause video
+	 * - ESC: exit tv
+	 * - P: toggle tv on off
+	 * - right/left: next previous video
+	 * left does not work good since we might need to skip several items
+	 * with images before we get to the previous video
+	 */
 	initKeyboardShortcuts() {
-		/**
-		 * ## Keyboard Shortcuts
-		 * Bind keyboard shortcuts:
-		 * - Space: pause video
-		 * - ESC: exit tv
-		 * - P: toggle tv on off
-		 * - right/left: next previous video
-		 * left does not work good since we might need to skip several items
-		 * with images before we get to the previous video
-		 */
 		document.addEventListener('keydown', (event) => {
 			// console.log('key ', event.keyCode);
 			if (event.keyCode === 32 /* Space*/) {
@@ -103,7 +105,7 @@ class App {
 		// listen
 		window.addEventListener('message', (event) => {
 			if (event.data.handshake) {
-				this.message('recieved webview handshake');
+				console.log('recieved webview handshake');
 			}
 			if (event.data.ended || event.data.error) {
 				this.message(`youtube ${event.data.ended ? 'ended' : 'error'}`);
@@ -114,7 +116,7 @@ class App {
 		// handshake
 		this.youtubeWebview.addEventListener('loadstop', () => {
 			if (!this.hasSendHanshake) {
-				this.message('send webview handshake');
+				console.log('send webview handshake');
 				this.hasSendHanshake = true;
 				this.youtubeMessage({ handshake: true });
 			}

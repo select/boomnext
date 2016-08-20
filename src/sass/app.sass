@@ -199,7 +199,8 @@ nav
 	text-align: center
 
 $station-box-width: 220px
-.stations
+.stations,
+.stations-static
 	margin-top: $touch-size-tiny
 	max-width: #{($station-box-width+$grid-space)*3}
 	display: flex
@@ -220,6 +221,9 @@ $station-box-width: 220px
 		transition: all $transition-time
 		&:hover
 			background: rgba(0,0,0,0.9)
+
+.stations
+	margin-top: 0
 
 
 .tv-overlay

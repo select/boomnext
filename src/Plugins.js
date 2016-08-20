@@ -7,28 +7,66 @@ export default class {
 		document.querySelector('.upload-plugin')
 			.addEventListener(
 				'change',
-				event => [].forEach.call(event.target.files, f => this.handleFile(f))
+				event => {
+					[].forEach.call(event.target.files, f => this.handleFile(f));
+					event.target.value = '';
+				}
 		);
-
+		this.initMessageInterface();
 		this.initDB(() => {
-			this.loadPlugins();
-			readyCallback();
+			readyCallback(this.loadPlugins());
 		});
 	}
 
+	initMessageInterface() {
+		console.log('init sandbox message interface');
+		this.sandbox = document.querySelector('iframe');
+
+		// listen
+		window.addEventListener('message', (event) => {
+			if (event.data.handshakeSandbox) {
+				console.log('recieved sandbox handshake');
+			}
+			// if (event.data.ended || event.data.error) {
+			// 	this.message(`youtube ${event.data.ended ? 'ended' : 'error'}`);
+			// 	this.nextVideo();
+			// }
+		});
+
+		// handshake
+		this.sandbox.onload = () => {
+			if (!this.hasSendHanshake) {
+				console.log('send sandbox handshake');
+				this.hasSendHanshake = true;
+				this.sandboxMessage({ handshakeSandbox: true });
+			}
+		};
+	}
+	sandboxMessage(data) {
+		this.sandbox.contentWindow.postMessage(data, '*');
+	}
+
 	loadPlugins() {
-		const stationsEl = document.querySelector('.stations');
 		const stationTemplate = `<div class="tv-station" data-name="{{className}}">
 				<img src="data:{{imageMime}};base64,{{image}}" width="{{width}}" height="{{height}}">
 			</div>`;
-		const pluginsEL = document.querySelector('.plugins-loaded');
 		const pluginsTemplate = '<li>{{className}} <div class="delete-plugin" data-class-name="{{className}}">✕</div></li>';
-		this.getAll().then(items => {
-			stationsEl.innerHTML = items.reduce((html, item) => `${html}${this.template(stationTemplate, item)}`, stationsEl.innerHTML);
-			pluginsEL.innerHTML = items.reduce((html, item) => `${html}${this.template(pluginsTemplate, item)}`, '');
+
+
+		return this.getAll().then(items => {
+			// const pluginsScriptEl = document.createElement('script');
+			// pluginsScriptEl.type = 'text/javascript';
+			// pluginsScriptEl.innerText = items.reduce((source, item) => `${source}${item.parser}`, '');
+			// document.getElementsByTagName('head')[0].appendChild(pluginsScriptEl);
+
+			document.querySelector('.stations').innerHTML = items.reduce((html, item) => `${html}${this.template(stationTemplate, item)}`, '');
+
+			document.querySelector('.plugins-loaded').innerHTML = items.reduce((html, item) => `${html}${this.template(pluginsTemplate, item)}`, '');
 			[].forEach.call(document.querySelectorAll('.delete-plugin'), el => {
-				el.addEventListener('click', () => this.delete(el.dataset.className, el.parentNode));
+				el.addEventListener('click', () => this.delete(el.dataset.className));
 			});
+
+			return items;
 		});
 	}
 
@@ -110,6 +148,7 @@ export default class {
 			})
 			.then(() => {
 				this.gui.warn('Plugin uploaded successfully.', 'success');
+				this.loadPlugins();
 			})
 			.catch(error => {
 				this.gui.warn(error);
@@ -135,7 +174,7 @@ export default class {
 		return promise;
 	}
 
-	delete(id, el) {
+	delete(id) {
 		const request = this.db
 			.transaction([this.collectionName], 'readwrite')
 			.objectStore(this.collectionName)
@@ -145,7 +184,7 @@ export default class {
 			this.gui.warn(`Error deleting ${id}: ${event.target.error.name}`);
 		};
 		request.onsuccess = (event) => {
-			el.parentNode.removeChild(el);
+			this.loadPlugins()
 			this.gui.warn(`Deleted plugin ${id}`, 'success');
 		};
 	}
