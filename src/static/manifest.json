@@ -15,11 +15,12 @@
 			}
 		]
 	},
+	"sandbox": {
+    "pages": ["plugins-sandbox.html", "plugins-sandbox.js"]
+  },
 	"permissions": [
 		"webview",
 		"fullscreen",
-		"http://izismile.com/videos/",
-		"http://9gag.com/tv/api/index/*",
 		"https://*/*"
 	],
 	"icons": {
