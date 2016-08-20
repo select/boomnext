@@ -2,10 +2,22 @@ export default class {
 	constructor() {
 		this.isReady = false;
 		this.collectionName = 'videos';
-		this.db;
+
+		// -----------------------
+		// Request storage usage and capacity left
+		navigator.webkitTemporaryStorage.queryUsageAndQuota(
+			(used, granted) => {
+				const percent = 100 * used / granted;
+				console.log(`## ${percent.toPrecision(2)}% storage used`);
+			},
+			error => {
+				console.log('Error', error);
+			}
+		);
+		// -----------------------
 
 		//No support? Go in the corner and pout.
-		if (!this.indexedDBOk) throw ('Error: indexDB missing.');
+		if (!('indexedDB' in window)) throw ('Error: indexDB missing.');
 
 		const openRequest = indexedDB.open('boomnext_v001c', 1);
 
@@ -26,17 +38,11 @@ export default class {
 		openRequest.onsuccess = (event) => {
 			this.isReady = true;
 			this.db = event.target.result;
-			//Listen for add clicks
-			// document.querySelector('#addButton').addEventListener('click', addPerson, false);
 		};
 
 		openRequest.onerror = (event) => {
 			throw ('Error: could not connect to indexDB.');
 		};
-	}
-
-	indexedDBOk() {
-		return 'indexedDB' in window;
 	}
 
 	exists(data = { id: undefined }) {
