@@ -74,9 +74,8 @@ export default class {
 	get(id) {
 		const promise = new Promise((resolve, reject) => {
 			const request = this.db
-				.transaction([this.collectionName], 'readwrite')
+				.transaction([this.collectionName], 'readonly')
 				.objectStore(this.collectionName)
-				// .index('id')
 				.get(id);
 			request.onerror = (event) => {
 				reject(`Error ${event.target.error.name}`);
