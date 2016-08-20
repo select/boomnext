@@ -109,6 +109,27 @@ nav
 			align-items: center
 	&.extended
 		margin-left: 0
+.plugins-empty
+	display: none
+.plugins-loaded
+	list-style: none
+	padding: 0
+	li
+		display: flex
+		justify-content: space-between
+		align-items: center
+		height: $touch-size-medium
+		>div
+			width: $touch-size-medium
+			height: $touch-size-medium
+			cursor: pointer
+			display: flex
+			justify-content: center
+			align-items: center
+			&:hover
+				color: $color-monza
+	&:empty + .plugins-empty
+		display: block
 
 .upload-plugin
 	display: none
@@ -122,16 +143,29 @@ nav
 		justify-content: center
 		align-items: center
 		cursor: pointer
-.upload-success
-	background: $color-larioja
-	color: $color-white
+.upload-overwrite
 	border-radius: 3px
+	color: $color-white
 	display: flex
 	justify-content: center
 	align-items: center
 	padding: #{2*$grid-space}
 	font-size: 0.7em
 	font-weight: 400
+	display: none
+	background: $color-clementine
+	button
+		border: 1px solid $color-white
+		border-radius: 3px
+		padding: $grid-space #{2*$grid-space}
+		background: transparent
+		color: $color-white
+		margin-left: $grid-space
+		cursor: pointer
+		transition: all 250ms
+		&:hover
+			background: $color-white
+			color: $color-clementine
 
 .icon-info
 	display: inline-block
@@ -223,7 +257,7 @@ $station-box-width: 220px
 // Stacking warnings
 .warn
 	position: absolute
-	z-index: 3
+	z-index: 4
 	width: 100%
 	top: #{2*$grid-space}
 	left: 0
@@ -232,7 +266,7 @@ $station-box-width: 220px
 	flex-direction: column
 	>div
 		position: relative
-		width: 340px
+		max-width: 340px
 		padding: #{2*$grid-space}
 		font-size: 1.2em
 		font-weight: 400
@@ -240,7 +274,9 @@ $station-box-width: 220px
 		color: $color-white
 		border-radius: 3px
 		margin-bottom: $grid-space
-		padding-right: #{2*$grid-space}
+		padding-right: #{4*$grid-space}
+		&.success
+			background: $color-larioja
 		.close
 			position: absolute
 			width: 30px

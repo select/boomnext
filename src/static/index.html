@@ -21,11 +21,17 @@
 					<b>Plugins</b><br>
 					<br>
 					<input class="upload-plugin" id="ufile" type="file" accept=".zip, application/zip"> <label for="ufile">Upload</label> a plugin
-					<div class="upload-success">Plugin uploaded successfully</div>
+					<div class="upload-overwrite">
+						Overwrite <span class="upload-class-name"></span>
+						<button>Yes</button>
+						<button>No</button>
+					</div>
+
 				</p>
 				<p>
 					Loaded Plugins
-					<ul></ul>
+					<ul class="plugins-loaded"></ul>
+					<div class="plugins-empty">... no plugins loaded</div>
 				</p>
 			</div>
 

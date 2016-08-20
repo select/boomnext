@@ -94,8 +94,9 @@ export default class {
 	 * Hide each message after 10s.
 	 * @param {String} data message string
 	 */
-	warn(data) {
+	warn(data, type) {
 		const el = document.createElement('div');
+		el.className = type;
 		el.innerHTML = `${data} <div class="close">✕</div>`;
 		this.warnEl.appendChild(el);
 		el.querySelector('.close').addEventListener('click', () => {

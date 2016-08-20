@@ -1,7 +1,7 @@
 import JSZip from 'jszip';
 
 export default class {
-	constructor(gui) {
+	constructor(gui, readyCallback) {
 		this.gui = gui;
 		if (!window.FileReader || !window.ArrayBuffer) throw 'plugin upload not possible, FileReader or ArrayBuffer not available';
 		document.querySelector('.upload-plugin')
@@ -9,10 +9,30 @@ export default class {
 				'change',
 				event => [].forEach.call(event.target.files, f => this.handleFile(f))
 		);
-		this.initDB();
+
+		this.initDB(() => {
+			this.loadPlugins();
+			readyCallback();
+		});
 	}
 
-	initDB() {
+	loadPlugins() {
+		const stationsEl = document.querySelector('.stations');
+		const stationTemplate = `<div class="tv-station" data-name="{{className}}">
+				<img src="data:{{imageMime}};base64,{{image}}" width="{{width}}" height="{{height}}">
+			</div>`;
+		const pluginsEL = document.querySelector('.plugins-loaded');
+		const pluginsTemplate = '<li>{{className}} <div class="delete-plugin" data-class-name="{{className}}">✕</div></li>';
+		this.getAll().then(items => {
+			stationsEl.innerHTML = items.reduce((html, item) => `${html}${this.template(stationTemplate, item)}`, stationsEl.innerHTML);
+			pluginsEL.innerHTML = items.reduce((html, item) => `${html}${this.template(pluginsTemplate, item)}`, '');
+			[].forEach.call(document.querySelectorAll('.delete-plugin'), el => {
+				el.addEventListener('click', () => this.delete(el.dataset.className, el.parentNode));
+			});
+		});
+	}
+
+	initDB(callback) {
 		this.isReady = false;
 		this.collectionName = 'plugins';
 
@@ -33,6 +53,7 @@ export default class {
 		openRequest.onsuccess = (event) => {
 			this.isReady = true;
 			this.db = event.target.result;
+			callback();
 		};
 
 		openRequest.onerror = (event) => {
@@ -40,67 +61,69 @@ export default class {
 		};
 	}
 
+	/**
+	 * ###template
+	 * @param {String} html
+	 * @param {Object} options
+	 * @return {String}
+	 */
 	template(html, options) {
-		let re = /\{\{(.+?)\}\}/g,
-			reExp = /(^( )?(var|if|for|else|switch|case|break|{|}|;))(.*)?/g,
-			code = 'with(obj) { var r=[];\n',
-			cursor = 0,
-			result;
-		var add = function(line, js) {
-			js ? (code += line.match(reExp) ? line + '\n' : 'r.push(' + line + ');\n') :
-				(code += line != '' ? 'r.push("' + line.replace(/"/g, '\\"') + '");\n' : '');
-			return add;
-		}
-		while (match = re.exec(html)) {
-			add(html.slice(cursor, match.index))(match[1], true);
-			cursor = match.index + match[0].length;
-		}
-		add(html.substr(cursor, html.length - cursor));
-		code = (code + 'return r.join(""); }').replace(/[\r\t\n]/g, ' ');
-		try {
-			result = new Function('obj', code).apply(options, [options]);
-		} catch (err) {
-			console.error("'" + err.message + "'", " in \n\nCode:\n", code, "\n");
-		}
-		return result;
+		let out = html;
+		Object.keys(options).forEach(key => {
+			out = out.replace(new RegExp(`\{\{${key}\}\}`, 'g'), options[key]);
+		});
+		return out;
 	}
 
 	handleFile(file) {
-		console.log('handleFile!!!')
-		debugger;
+		const mimes = {
+			svg: 'image/svg+xml',
+			png: 'image/png',
+			jpg: 'image/jpeg',
+			jpeg: 'image/jpeg',
+			gif: 'image/gif',
+		};
 		let zip;
+		let manifest;
 		JSZip.loadAsync(file)
 			.then(z => {
 				zip = z;
 				return zip.file('plugin.json').async('string');
 			})
-			.then(content => JSON.parse(content))
-			.then(manifest => Promise.all([
-				/* 0 */ manifest,
-				/* 1 */ this.get(manifest.className),
-				/* 2 */ zip.file(manifest.logoImg).async('base64'),
-				/* 3 */ zip.file('Parser.js').async('string'),
-			]))
+			.then(content => {
+				manifest = JSON.parse(content);
+				return this.get(manifest.className);
+			})
+			.then(exists => {
+				if (exists) throw(`Plugin ${manifest.className} already exists. Delete first to replace.`);
+				return Promise.all([
+					/* 0 */ zip.file('Parser.js').async('string'),
+					/* 1 */ zip.file(manifest.logoImg).async('base64'),
+				]);
+			})
 			.then(values => {
-				debugger;
-				if (values[1]) throw('plugin clasName already exists');
-				this.set(Object.assign(values[0], { image: values[2], parser: values[3] }));
+				this.set(Object.assign(manifest, {
+					parser: values[0],
+					image: values[1],
+					imageMime: mimes[manifest.logoImg.match(/\.([^\.]+)$/)[1]],
+				}), values[1]/* use put if key exists */);
 			})
 			.then(() => {
-				document.querySelector('.upload-success').display = 'block';
+				this.gui.warn('Plugin uploaded successfully.', 'success');
 			})
 			.catch(error => {
-				console.warn('Error: ', error);
-				this.gui.warn(`Error ${error}`);
+				this.gui.warn(error);
 			});
 	}
 
-	set(data) {
+	set(data, put = false) {
 		const promise = new Promise((resolve, reject) => {
-			const request = this.db
+			const store = this.db
 				.transaction([this.collectionName], 'readwrite')
-				.objectStore(this.collectionName)
-				.add(data);
+				.objectStore(this.collectionName);
+
+			const request = put ? store.put(data) : store.add(data);
+
 			request.onerror = (event) => {
 				reject(`Error ${event.target.error.name}`);
 			};
@@ -112,10 +135,48 @@ export default class {
 		return promise;
 	}
 
+	delete(id, el) {
+		const request = this.db
+			.transaction([this.collectionName], 'readwrite')
+			.objectStore(this.collectionName)
+			.delete(id);
+
+		request.onerror = (event) => {
+			this.gui.warn(`Error deleting ${id}: ${event.target.error.name}`);
+		};
+		request.onsuccess = (event) => {
+			el.parentNode.removeChild(el);
+			this.gui.warn(`Deleted plugin ${id}`, 'success');
+		};
+	}
+
+	getAll() {
+		const promise = new Promise((resolve, reject) => {
+			const request = this.db
+				.transaction(this.collectionName, 'readonly')
+				.objectStore(this.collectionName)
+				.openCursor();
+			request.onerror = (event) => {
+				reject(`Error ${event.target.error.name}`);
+			};
+
+			request.onsuccess = (event) => {
+				const items = [];
+				const cursor = event.target.result;
+				if (cursor) {
+					items.push(cursor.value);
+					cursor.continue();
+				}
+				resolve(items);
+			};
+		});
+		return promise;
+	}
+
 	get(id) {
 		const promise = new Promise((resolve, reject) => {
 			const request = this.db
-				.transaction([this.collectionName], 'readonly')
+				.transaction(this.collectionName, 'readonly')
 				.objectStore(this.collectionName)
 				.get(id);
 			request.onerror = (event) => {
