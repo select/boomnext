@@ -21,13 +21,19 @@
 					<b>Plugins</b><br>
 					<br>
 					<input class="upload-plugin" id="ufile" type="file" accept=".zip, application/zip"> <label for="ufile">Upload</label> a plugin
+					<div class="upload-overwrite">
+						Overwrite <span class="upload-class-name"></span>
+						<button>Yes</button>
+						<button>No</button>
+					</div>
+
 				</p>
 				<p>
 					Loaded Plugins
-					<ul></ul>
+					<ul class="plugins-loaded"></ul>
+					<div class="plugins-empty">... no plugins loaded</div>
 				</p>
 			</div>
-
 		</div>
 
 		<!-- About overlay -->
@@ -136,19 +142,25 @@
 		</div>
 
 		<!-- TV Stations -->
-		<div class="stations">
-			<div class="tv-station" data-name="imgur">
+		<div class="stations-static">
+			<div data-name="imgur">
 				<img src="img/imgur-logo.svg" width="150">
 			</div>
-			<!-- <div class="tv-station" data-name="pr0">
-				<img src="img/pr0gramm-logo.png" width="70">
-			</div> -->
-			<div class="tv-station" data-name="ninegag">
+			<div data-name="ninegag">
 				<img src="img/9gag-logo.png" width="70">
 			</div>
-			<div class="tv-station" data-name="izismile">
-				<img src="img/izismile-logo.gif" width="150">
+			<div data-name="pr0gramm">
+				<img src="img/pr0gramm-logo.png" width="70">
 			</div>
 		</div>
+		<div class="stations">
+			<!-- <div data-plugin="izismile">
+				<img src="... data url" width="150">
+			</div> -->
+		</div>
+
+		<!-- Plugins sandbox -->
+		<iframe id="theFrame" src="plugins-sandbox.html" height="1" width="1"></iframe>
+
 	</body>
 </html>
