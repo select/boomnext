@@ -1,14 +1,8 @@
-class Imgur2 {
+class BaseParser {
 	constructor() {
 		this.videos = [];
 		this.currentVideoIndex = -1;
 		this.currentPageIndex = 0;
-
-		this.baseURL = 'https://api.imgur.com/3/gallery/hot/viral/';
-		this.requestHeader = ['Authorization', 'Client-ID <client-id>'];
-		// this.videos = []; // provided in base
-		this.parserName = 'imgur API';
-		this.currentPageIndex = -1;
 	}
 
 	ajax(url) {
@@ -31,18 +25,8 @@ class Imgur2 {
 	}
 
 	getVideosFromIndex(index) {
-		const url = index ? `${this.baseURL}${index}.json` : `${this.baseURL}0.json`;
-		return this.ajax(url).then(rawJsonIndex => {
-			this.videos = [
-				...this.videos,
-				...JSON.parse(rawJsonIndex).data
-					.filter(item => item.mp4)
-					.map(item => ({
-						id: item.mp4,
-						mp4: item.mp4,
-					})),
-			];
-		});
+		// Return promise if resolved we got the index page a
+		// whole bunch of new videos.
 	}
 
 	getNext() {
@@ -55,7 +39,7 @@ class Imgur2 {
 
 			// no videos left, we must wait before we can return a new video
 			if (this.currentVideoIndex >= this.videos.length - 1) {
-				this.getVideosFromIndex(++this.currentPageIndex).then(() => {
+				this.getVideosFromIndex().then(() => {
 					resolve(this.videos[this.currentVideoIndex]);
 				}, err => {
 					--this.currentPageIndex;
@@ -64,10 +48,7 @@ class Imgur2 {
 			} else {
 				// 3 before last, request next index page to get more videos
 				if (this.currentVideoIndex >= this.videos.length - 4) {
-					this.getVideosFromIndex(++this.currentPageIndex).catch(err => {
-						--this.currentPageIndex;
-						reject(err);
-					});
+					this.getVideosFromIndex();
 				}
 				resolve(this.videos[this.currentVideoIndex]);
 			}
@@ -82,3 +63,45 @@ class Imgur2 {
 		return this.videos[this.currentVideoIndex];
 	}
 }
+
+// ---
+class Imgur2 extends BaseParser {
+	constructor() {
+		super();
+		this.baseURL = 'https://api.imgur.com/3/gallery/hot/viral/';
+		this.requestHeader = ['Authorization', 'Client-ID c35fbc04fe9ccda'];
+		// this.videos = []; // provided in base
+		this.parserName = 'imgur API';
+		this.currentPageIndex = 0;
+		this.parserRunning = false;
+	}
+
+	getVideosFromIndex() {
+		const url = `${this.baseURL}${this.currentPageIndex}.json`;
+		if (!this.parserRunning) {
+			this.parserRunning = true;
+			return this.ajax(url).then(rawJsonIndex => {
+				this.parserRunning = false;
+				++this.currentPageIndex;
+				this.videos = [
+					...this.videos,
+					...JSON.parse(rawJsonIndex).data
+						.filter(item => item.mp4)
+						.map(item => ({
+							id: item.mp4,
+							mp4: item.mp4,
+						})),
+				];
+			});
+		} else {
+			console.warn('imgur index is already running!!!');
+			debugger;
+		}
+	}
+}
+
+
+(function() {
+	window.parsers.Imgur2 = new Imgur2();
+	console.log('added parser Imgur2');
+})();

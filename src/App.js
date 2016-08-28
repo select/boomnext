@@ -20,7 +20,7 @@ class App {
 		this.gui = new Gui();
 		this.message('# Boom, next video!');
 		try { // if indexDB is available
-			this.db = new IndexDB();
+			this.db = new IndexDB(this.gui);
 		} catch (err) {
 			this.gui.warn(err);
 		}
@@ -30,9 +30,8 @@ class App {
 			ninegag: new NineGagParser(),
 			pr0gramm: new Pr0grammParser(),
 		};
-		this.plugins = new Plugins(this.gui, pluginsPromise => {
-			pluginsPromise.then(plugins => plugins.forEach(plugin => { this.parsers[plugin] = new window[plugin](); }));
-		});
+
+		this.plugins = new Plugins(this.gui);
 
 		this.gui.controlEl.addEventListener('click', () => this.toggleTV());
 		this.gui.prevEl.addEventListener('click', () => this.prevVideo());
@@ -46,17 +45,23 @@ class App {
 		this.initKeyboardShortcuts();
 
 		// default station
-		this.parser = this.parsers.imgur;
 		this.currentParser = 'imgur';
 		// choose station on click and start it
 		const that = this;
-		[].forEach.call(document.querySelectorAll('.tv-station'), button => {
+		[].forEach.call(document.querySelectorAll('[data-name]'), button => {
 			button.addEventListener('click', (event) => {
-				console.log('change parser');
-				that.parser = that.parsers[event.currentTarget.dataset.name];
+				that.currentPlugin = '';
 				that.currentParser = event.currentTarget.dataset.name;
 				that.toggleTV();
 			});
+		});
+		document.querySelector('.stations').addEventListener('click', (event) => {
+			if (event.target.dataset.plugin) {
+				that.currentPlugin = event.target.dataset.plugin;
+				this.plugins.sandboxMessage({ setParser: that.currentPlugin });
+				that.currentParser = '';
+				that.toggleTV();
+			}
 		});
 	}
 
@@ -172,19 +177,35 @@ class App {
 	message(data) {
 		this.gui.message(data);
 	}
+	pluginsMessage(data) {
+		const messageId = this.uid();
+		const promise = new Promise(resolve => {
+			window.addEventListener('message', function(event) {
+				if (event.data.messageId) {
+					window.removeEventListener('message', this);
+					resolve(event.data.video);
+				}
+			});
+			this.plugins.sandboxMessage(Object.assign({ messageId }, data));
+		});
+		return promise;
+	}
+	uid() {
+		const s4 = () => Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
+		return s4() + s4();
+	}
 
 	nextVideo(skip) {
-		this.message(`requesting next video from ${this.currentParser}`);
+
+		const nextFunction = this.currentPlugin ? this.pluginsMessage({ getNext: true }) : this.parsers[this.currentParser].getNext();
 
 		if (skip) {
-			this.parser.getNext()
+			nextFunction
 				.then(video => {
-					this.message(`got next video ${JSON.stringify(video)}`);
 					this.video = video;
 					return this.db.exists(video);
 				})
 				.then(exists => {
-					this.message(`video exists? ${exists}`);
 					if (exists) {
 						this.nextVideo(true);
 					} else {
@@ -192,8 +213,7 @@ class App {
 					}
 				}, error => this.gui.warn(error));
 		} else {
-			this.parser.getNext().then(video => {
-				this.message(`got next video ${JSON.stringify(video)}`);
+			nextFunction.then(video => {
 				this.db.exists(video);
 				this.startVideo(video);
 			});
@@ -201,7 +221,7 @@ class App {
 	}
 
 	prevVideo() {
-		this.startVideo(this.parser.getPrev());
+		this.startVideo(this.parsers[this.currentParser].getPrev());
 	}
 }
 

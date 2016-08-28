@@ -1,42 +1,38 @@
 import JSZip from 'jszip';
 
 export default class {
-	constructor(gui, readyCallback) {
+	constructor(gui) {
 		this.gui = gui;
+		// needed by jszip, look at their docu
 		if (!window.FileReader || !window.ArrayBuffer) throw 'plugin upload not possible, FileReader or ArrayBuffer not available';
 		document.querySelector('.upload-plugin')
 			.addEventListener(
 				'change',
 				event => {
 					[].forEach.call(event.target.files, f => this.handleFile(f));
-					event.target.value = '';
+					event.target.value = ''; // clear input for reupload of the same file
 				}
 		);
-		this.initMessageInterface();
-		this.initDB(() => {
-			readyCallback(this.loadPlugins());
+		this.initMessageInterface(() => {
+			this.initDB(() => {
+				this.loadPlugins();
+			});
 		});
 	}
 
-	initMessageInterface() {
-		console.log('init sandbox message interface');
+	initMessageInterface(callback) {
 		this.sandbox = document.querySelector('iframe');
 
 		// listen
 		window.addEventListener('message', (event) => {
 			if (event.data.handshakeSandbox) {
-				console.log('recieved sandbox handshake');
+				callback();
 			}
-			// if (event.data.ended || event.data.error) {
-			// 	this.message(`youtube ${event.data.ended ? 'ended' : 'error'}`);
-			// 	this.nextVideo();
-			// }
 		});
 
 		// handshake
 		this.sandbox.onload = () => {
 			if (!this.hasSendHanshake) {
-				console.log('send sandbox handshake');
 				this.hasSendHanshake = true;
 				this.sandboxMessage({ handshakeSandbox: true });
 			}
@@ -47,17 +43,13 @@ export default class {
 	}
 
 	loadPlugins() {
-		const stationTemplate = `<div class="tv-station" data-name="{{className}}">
+		const stationTemplate = `<div data-plugin="{{className}}">
 				<img src="data:{{imageMime}};base64,{{image}}" width="{{width}}" height="{{height}}">
 			</div>`;
 		const pluginsTemplate = '<li>{{className}} <div class="delete-plugin" data-class-name="{{className}}">✕</div></li>';
 
-
 		return this.getAll().then(items => {
-			// const pluginsScriptEl = document.createElement('script');
-			// pluginsScriptEl.type = 'text/javascript';
-			// pluginsScriptEl.innerText = items.reduce((source, item) => `${source}${item.parser}`, '');
-			// document.getElementsByTagName('head')[0].appendChild(pluginsScriptEl);
+			this.sandboxMessage({ loadScripts: items });
 
 			document.querySelector('.stations').innerHTML = items.reduce((html, item) => `${html}${this.template(stationTemplate, item)}`, '');
 
@@ -66,12 +58,11 @@ export default class {
 				el.addEventListener('click', () => this.delete(el.dataset.className));
 			});
 
-			return items;
+			this.plugins = items;
 		});
 	}
 
 	initDB(callback) {
-		this.isReady = false;
 		this.collectionName = 'plugins';
 
 		//No support? Go in the corner and pout.
@@ -87,20 +78,21 @@ export default class {
 				});
 			}
 		};
-
 		openRequest.onsuccess = (event) => {
-			this.isReady = true;
 			this.db = event.target.result;
 			callback();
 		};
-
 		openRequest.onerror = (event) => {
 			throw ('Error: could not connect to indexDB.');
 		};
 	}
 
 	/**
-	 * ###template
+	 * ### template
+	 * minimal templating framework
+	 * ```
+	 * this.template('<div>{{foo}}</div>', {foo: 'bar'})
+	 * ```
 	 * @param {String} html
 	 * @param {Object} options
 	 * @return {String}
@@ -112,6 +104,9 @@ export default class {
 		});
 		return out;
 	}
+
+	// --
+	// On file upload
 
 	handleFile(file) {
 		const mimes = {
@@ -140,11 +135,11 @@ export default class {
 				]);
 			})
 			.then(values => {
-				this.set(Object.assign(manifest, {
+				return this.set(Object.assign(manifest, {
 					parser: values[0],
 					image: values[1],
 					imageMime: mimes[manifest.logoImg.match(/\.([^\.]+)$/)[1]],
-				}), values[1]/* use put if key exists */);
+				}));
 			})
 			.then(() => {
 				this.gui.warn('Plugin uploaded successfully.', 'success');
@@ -155,21 +150,19 @@ export default class {
 			});
 	}
 
-	set(data, put = false) {
+	// --
+	// ## Database operations
+
+	set(data) {
 		const promise = new Promise((resolve, reject) => {
-			const store = this.db
-				.transaction([this.collectionName], 'readwrite')
-				.objectStore(this.collectionName);
-
-			const request = put ? store.put(data) : store.add(data);
-
-			request.onerror = (event) => {
-				reject(`Error ${event.target.error.name}`);
-			};
-
-			request.onsuccess = () => {
-				resolve();
-			};
+			// const request = this.db
+			const ta = this.db.transaction([this.collectionName], 'readwrite');
+			ta.onerror = (event) => reject(`Error ${event.target.error.name}`);
+			const os = ta.objectStore(this.collectionName);
+			os.onerror = (event) => reject(`Error ${event.target.error.name}`);
+			const request = os.add(data);
+			request.onerror = (event) => reject(`Error ${event.target.error.name}`);
+			request.onsuccess = (event) => resolve(event);
 		});
 		return promise;
 	}
@@ -179,12 +172,11 @@ export default class {
 			.transaction([this.collectionName], 'readwrite')
 			.objectStore(this.collectionName)
 			.delete(id);
-
 		request.onerror = (event) => {
 			this.gui.warn(`Error deleting ${id}: ${event.target.error.name}`);
 		};
 		request.onsuccess = (event) => {
-			this.loadPlugins()
+			this.loadPlugins();
 			this.gui.warn(`Deleted plugin ${id}`, 'success');
 		};
 	}
@@ -195,11 +187,8 @@ export default class {
 				.transaction(this.collectionName, 'readonly')
 				.objectStore(this.collectionName)
 				.openCursor();
-			request.onerror = (event) => {
-				reject(`Error ${event.target.error.name}`);
-			};
-
-			request.onsuccess = (event) => {
+			request.onerror = event => reject(`Error ${event.target.error.name}`);
+			request.onsuccess = event => {
 				const items = [];
 				const cursor = event.target.result;
 				if (cursor) {
@@ -218,13 +207,8 @@ export default class {
 				.transaction(this.collectionName, 'readonly')
 				.objectStore(this.collectionName)
 				.get(id);
-			request.onerror = (event) => {
-				reject(`Error ${event.target.error.name}`);
-			};
-
-			request.onsuccess = (event) => {
-				resolve(event.target.result);
-			};
+			request.onerror = event => reject(`Error ${event.target.error.name}`);
+			request.onsuccess = event => resolve(event.target.result);
 		});
 		return promise;
 	}
