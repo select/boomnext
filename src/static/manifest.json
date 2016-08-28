@@ -1,6 +1,6 @@
 {
-	"name": "Boom Next Video",
-	"description": "My first Chrome App.",
+	"name": "Boom, next video!",
+	"description": "Video streams from the best sites on the web.",
 	"version": "0.00.001",
 	"app": {
 		"background": {
