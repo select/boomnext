@@ -4,6 +4,11 @@
 <img alt="Try it now" src="https://camo.githubusercontent.com/334b4f665751356b1f4afb758f8ddde55b9c71b8/68747470733a2f2f7261772e6769746875622e636f6d2f476f6f676c654368726f6d652f6368726f6d652d6170702d73616d706c65732f6d61737465722f74727969746e6f77627574746f6e5f736d616c6c2e706e67" title="Click here to install this app from the Chrome Web Store" data-canonical-src="https://raw.github.com/GoogleChrome/chrome-app-samples/master/tryitnowbutton_small.png" style="max-width:100%;">
 </a>
 
+https://rawgit.com/select/boomnext/224e104e4a29438472965b94efd920d130dd8106/dist/html-lesson-1.html
+
+<img src="" alt="https://rawgit.com/select/boomnext/1bcb55caaa63b86addac641471adeab44e53bac0/src/img/screenshots/Screenshot%20Boom%20next%20video.png
+" style="float: right;" width="400px">
+
 Stream videos! Click on a cannel and enjoy.
 
 Current plugins:
