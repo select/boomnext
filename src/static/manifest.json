@@ -1,7 +1,7 @@
 {
 	"name": "Boom, next video!",
 	"description": "Video streams from the best sites on the web.",
-	"version": "0.00.001",
+	"version": "0.0.1",
 	"app": {
 		"background": {
 			"scripts": ["background.js"]
