@@ -79,22 +79,22 @@ Read the [documentation for plugins here](https://github.com/select/boomnext/tre
 		</tr>
 		<tr>
 			<td class="larger">‹</td>
-			<td><kdb>◀</kdb></td>
+			<td><kbd>◀</kbd></td>
 			<td>Previous video</td>
 		</tr>
 		<tr>
 			<td class="larger">›</td>
-			<td><kdb>▶</kdb></td>
+			<td><kbd>▶</kbd></td>
 			<td>Next video</td>
 		</tr>
 		<tr>
 			<td class="larger">»</td>
-			<td><kdb>N</kdb></td>
+			<td><kbd>N</kbd></td>
 			<td>Next video (skip watched)</td>
 		</tr>
 		<tr>
 			<td></td>
-			<td><kdb>Space</kdb></td>
+			<td><kbd>Space</kbd></td>
 			<td>Pause / play video</td>
 		</tr>
 	</tbody>
