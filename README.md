@@ -5,7 +5,7 @@
 </a>
 
 
-Stream videos! Click on a cannel and enjoy.
+Stream videos! Click on a channel and enjoy.
 
 Current plugins:
 - Imgur
@@ -29,7 +29,6 @@ class Imgur extends BaseParser {
 	getVideosFromIndex() {
 		const url = 'https://api.imgur.com/3/gallery/hot/viral/${this.currentPageIndex}.json';
 		return this.ajax(url).then(rawJsonIndex => {
-			this.parserRunning = false;
 			++this.currentPageIndex;
 			this.videos = [
 				...this.videos,
