@@ -44,7 +44,6 @@ class Imgur extends BaseParser {
 }
 ``` 
 
-
 ## Installation
 
 On the Chrome web store or 
@@ -56,7 +55,7 @@ On the Chrome web store or
 
 ## Plugins
 
-Read the [Docu for plugins here](https://github.com/select/boomnext/tree/master/src/plugins/imgur).
+Read the [documentation for plugins here](https://github.com/select/boomnext/tree/master/src/plugins/imgur).
 
 ## Usage
 
@@ -75,27 +74,27 @@ Read the [Docu for plugins here](https://github.com/select/boomnext/tree/master/
 	<tbody>
 		<tr>
 			<td><div class="boom">💣</div></td>
-			<td>B</td>
+			<td><kbd>B</kbd></td>
 			<td>Start / stop TV</td>
 		</tr>
 		<tr>
 			<td class="larger">‹</td>
-			<td>◀</td>
+			<td><kdb>◀</kdb></td>
 			<td>Previous video</td>
 		</tr>
 		<tr>
 			<td class="larger">›</td>
-			<td>▶</td>
+			<td><kdb>▶</kdb></td>
 			<td>Next video</td>
 		</tr>
 		<tr>
 			<td class="larger">»</td>
-			<td>N</td>
+			<td><kdb>N</kdb></td>
 			<td>Next video (skip watched)</td>
 		</tr>
 		<tr>
 			<td></td>
-			<td>Space</td>
+			<td><kdb>Space</kdb></td>
 			<td>Pause / play video</td>
 		</tr>
 	</tbody>
