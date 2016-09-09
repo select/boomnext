@@ -1,7 +1,7 @@
 {
 	"name": "Boom, next video!",
 	"description": "Video streams from the best sites on the web.",
-	"version": "0.0.1",
+	"version": "0.0.2",
 	"app": {
 		"background": {
 			"scripts": ["background.js"]
@@ -21,7 +21,8 @@
 	"permissions": [
 		"webview",
 		"fullscreen",
-		"https://*/*"
+		"https://*/*",
+		"http://*/*"
 	],
 	"icons": {
 		"16": "boomnext-16.png",
