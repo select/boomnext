@@ -4,9 +4,13 @@
 	"description": "izismile.com as a continous video stream",
 	"main": "tv.js",
 	"scripts": {
-		"start": "./node_modules/.bin/webpack --config='webpack.js' --watch --progress --profile --colors --display-error-details --display-cached",
+		"start": "concurrently  --kill-others 'npm run webpack' 'npm run sync'",
+		"webpack": "./node_modules/.bin/webpack --config='webpack.js' --watch --progress --profile --colors --display-error-details --display-cached",
+		"webpack1": "./node_modules/.bin/webpack --config='webpack.js' --progress --profile --colors --display-error-details --display-cached",
 		"sync": "./node_modules/.bin/sync-files --watch src/static dist/",
-		"test": "echo \"Error: no test specified\" && exit 1"
+		"sync1": "./node_modules/.bin/sync-files src/static dist/",
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"zip": "npm run sync1; npm run webpack1; cd dist/ ; zip -r ../boomnext.chrome.app.zip . *"
 	},
 	"author": "select",
 	"license": "MIT",
@@ -15,6 +19,7 @@
 		"babel-core": "^6.11.4",
 		"babel-loader": "^6.2.4",
 		"babel-preset-es2015": "^6.9.0",
+		"concurrently": "^2.2.0",
 		"css-loader": "^0.23.1",
 		"file-loader": "^0.9.0",
 		"node-sass": "^3.8.0",
