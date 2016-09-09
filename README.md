@@ -111,7 +111,10 @@ Read the [documentation for plugins here](https://github.com/select/boomnext/tre
 
 ## History
 
-v 0.0.1
+v 0.0.2 - 2016-09-08
+- Fixed: allow http and https requests so all APIs can be reached
+
+v 0.0.1 - 2016-08-26
 - Added a plugin system
 - 4 channels working
 - Skip watched videos with <kbd>N</kbd> or click `»`
