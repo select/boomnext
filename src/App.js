@@ -15,6 +15,7 @@ import FlipsideJapan from './parser/flipsidejapan/Parser.js';
 import ExtraFunnyVideos from './parser/extrafunnyvideos/Parser.js';
 import HansWurst from './parser/hanswurst/Parser.js';
 import Wimp from './parser/wimp/Parser.js';
+import Dumpert from './parser/dumpert/Parser.js';
 import IndexDB from './IndexDBVideos';
 import Plugins from './Plugins';
 
@@ -36,6 +37,7 @@ class App {
 			flipsidejapan: new FlipsideJapan(),
 			extrafunnyvideos: new ExtraFunnyVideos(),
 			hanswurst: new HansWurst(),
+			dumpert: new Dumpert(),
 			wimp: new Wimp(),
 		};
 
