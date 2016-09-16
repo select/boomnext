@@ -9,18 +9,6 @@ export default class extends BaseParser {
 		this.parserName = 'Izismile';
 	}
 
-	findVideo(html) {
-		const node = document.createElement('div');
-		node.innerHTML = html;
-		const ytNode = node.querySelector('iframe[allowfullscreen]');
-		const mp4Node = node.querySelector('a[href$=".mp4"]');
-		return {
-			id: ytNode ? ytNode.src : mp4Node.href,
-			youtube: { url: ytNode ? ytNode.src : null },
-			mp4: mp4Node ? mp4Node.href : null,
-		};
-	}
-
 	getVideosFromIndex() { // http://izismile.com/videos/page/2/
 		const url = this.currentPageIndex > 1 ? `${this.baseURL}page/${this.currentPageIndex}/` : this.baseURL;
 		return this.ajax(url).then(htmlIndex => {

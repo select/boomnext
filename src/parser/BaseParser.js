@@ -2,7 +2,6 @@ export default class {
 	constructor() {
 		this.videos = [];
 		this.currentVideoIndex = -1;
-		this.currentPageIndex = 0;
 	}
 
 	ajax(url) {
@@ -24,6 +23,19 @@ export default class {
 		return promise;
 	}
 
+	findVideo(html) {
+		const node = document.createElement('div');
+		node.innerHTML = html;
+		const ytNode = node.querySelector('iframe[allowfullscreen], iframe.youtube-player');
+		const mp4Node = node.querySelector('a[href$=".mp4"]');
+		const ytURL = ytNode ? ytNode.src.replace(/\?.*$/, '') : null;
+		return {
+			id: ytURL || mp4Node.href,
+			youtube: { url: ytURL },
+			mp4: mp4Node ? mp4Node.href : null,
+		};
+	}
+
 	getVideosFromIndex(index) {
 		// Return promise if resolved we got the index page a
 		// whole bunch of new videos.
@@ -42,7 +54,6 @@ export default class {
 				this.getVideosFromIndex().then(() => {
 					resolve(this.videos[this.currentVideoIndex]);
 				}, err => {
-					--this.currentPageIndex;
 					reject(err);
 				});
 			} else {

@@ -11,6 +11,10 @@ import IzismileParser from './parser/izismile/Parser';
 import ImgurParser from './parser/imgur/Parser';
 import NineGagParser from './parser/ninegag/Parser';
 import Pr0grammParser from './parser/pr0gramm/Parser';
+import FlipsideJapan from './parser/flipsidejapan/Parser.js';
+import ExtraFunnyVideos from './parser/extrafunnyvideos/Parser.js';
+import HansWurst from './parser/hanswurst/Parser.js';
+import Wimp from './parser/wimp/Parser.js';
 import IndexDB from './IndexDBVideos';
 import Plugins from './Plugins';
 
@@ -29,6 +33,10 @@ class App {
 			izismile: new IzismileParser(),
 			ninegag: new NineGagParser(),
 			pr0gramm: new Pr0grammParser(),
+			flipsidejapan: new FlipsideJapan(),
+			extrafunnyvideos: new ExtraFunnyVideos(),
+			hanswurst: new HansWurst(),
+			wimp: new Wimp(),
 		};
 
 		this.plugins = new Plugins(this.gui);
